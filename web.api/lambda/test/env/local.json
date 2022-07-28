@@ -1,0 +1,8 @@
+{
+    "Parameters": {
+        "LAMBDA_ENV": "local",
+        "DYNAMODB_REGION": "ap-southeast-1",
+        "DYNAMODB_TABLE_NAME": "BookLibrary",
+        "DYNAMODB_ENDPOINT": "http://dynamodb:8000/"
+    }
+}
