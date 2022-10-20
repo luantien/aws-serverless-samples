@@ -11,6 +11,7 @@ logger.setLevel(logging.INFO)
 
 def handler(event, context):
     logger.info('Received event: %s', event)
+    # raise Exception("Cannot send email properly")
     try:
         content = 'Sentiment analysis: {sentiment} review from user({reviewer}): "{message}".'
         result = content.format(

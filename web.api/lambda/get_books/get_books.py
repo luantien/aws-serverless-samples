@@ -50,6 +50,7 @@ def handler(event, context):
 
 
 def getBooksJson(items):
+    # logger.info('Parsing books response data')
     books = defaultdict(list)
 
     for item in items:

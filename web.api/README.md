@@ -23,13 +23,12 @@ export AWS_PROFILE=<your_profile>
 -   `cdk diff` compare deployed stack with current state
 -   `cdk synth` emits the synthesized CloudFormation template
 
-## Dynamo Seeder
-
-```bash
-aws dynamodb batch-write-item --profile <your_profile> --request-items file://./seeder/data-population.json
-```
-
 ## Local Testing
+```bash
+# Generate Lambda Layer
+cd lambda
+pip install -r lambda/requirements.txt -t lambda/packages/python
+```
 
 ```bash
 # Create bridge network
@@ -91,11 +90,15 @@ sam local invoke -t ./cdk.out/WebApiStack.template.json GetBookDetail --env-vars
 
 -   Set `AWS_PROFILE` to your profile
 -   Update `.env` file with your AWS information
+```bash
+# If you got the error 'Need to perform AWS calls for account <account_id>, but no credentials have been configured', please clear cdk cache
+# Otherwise skip this
+rm -rf ~/.cdk/
+```
 
 ```bash
-# Generate Lambda Layer
-cd lambda
-pip install -r lambda/requirements.txt -t lambda/packages/python
+# Dynamo Seeder
+aws dynamodb batch-write-item --profile <your_profile> --request-items file://./seeder/data-population.json
 ```
 
 ```bash
