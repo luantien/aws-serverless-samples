@@ -1,9 +1,7 @@
 import boto3
 import json
 import logging
-import uuid
 import os
-import argparse
 from collections import defaultdict
 
 

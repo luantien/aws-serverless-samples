@@ -9,6 +9,8 @@ cdk.out
 
 # CDK environment
 .env
+.env.local
+.env.prod
 
 # Python Virtual Environment & Packages
 venv

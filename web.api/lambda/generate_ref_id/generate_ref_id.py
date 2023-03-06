@@ -7,8 +7,10 @@ logger.setLevel(logging.INFO)
 
 
 def handler(event, context):
-    logging.info('Received event: %s', event)
+    # logging.info('Received event: %s', event)
 
-    recordId = uuid.uuid4()
+    recordId = str(uuid.uuid4())
 
-    return 'r#{}'.format(str(recordId))
+    logger.info('Generated UUID: {}'.format(recordId))
+
+    return 'r#{}'.format(recordId)

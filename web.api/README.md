@@ -83,7 +83,7 @@ sam local start-api -t ./cdk.out/WebApiStack.template.json --env-vars lambda/tes
 
 ```bash
 # Trigger invoke for get book api
-sam local invoke -t ./cdk.out/WebApiStack.template.json GetBookDetail --env-vars lambda/test/env/local.json -e lambda/test/event/get-books-event.json --docker-network aws-local
+sam local invoke -t ./cdk.out/WebApiStack.template.json GenerateRefIdFunction --env-vars lambda/test/env/local.json -e lambda/test/event/sample-event.json
 ```
 
 ## Deploy to AWS Region
