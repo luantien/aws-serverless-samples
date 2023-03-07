@@ -2,6 +2,7 @@ import boto3
 import json
 import logging
 import os
+import urllib
 from collections import defaultdict
 
 
@@ -23,7 +24,7 @@ else:
 logger.info('Using dynamodb table: %s\n', db_table)
 
 def handler(event, context):
-    book_id = event['pathParameters']['bookId']
+    book_id = urllib.parse.unquote(event['pathParameters']['bookId'])
 
     if book_id:
         logger.info('Query for book with partition key = '+ book_id)
