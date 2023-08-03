@@ -1,7 +1,8 @@
-import { Stack, StackProps, RemovalPolicy, CfnOutput } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy, CfnOutput} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+// import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import { CloudFrontDistribution } from './cloudfront-distribution';
 
 export class WebClientStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -13,29 +14,9 @@ export class WebClientStack extends Stack {
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
             autoDeleteObjects: true,
             removalPolicy: RemovalPolicy.DESTROY,
-            websiteIndexDocument: 'index.html',
         });
 
-        const oai = new cloudfront.OriginAccessIdentity(this, 'OAI', {
-            comment: `OAI for ${bucket.bucketName}`,
-        });
-
-        const distribution = new cloudfront.CloudFrontWebDistribution(
-            this,
-            'Distribution',
-            {
-                originConfigs: [
-                    {
-                        s3OriginSource: {
-                            s3BucketSource: bucket,
-                            originAccessIdentity: oai,
-                        },
-                        behaviors: [{ isDefaultBehavior: true }],
-                    },
-                ],
-            }
-        );
-        bucket.grantRead(oai);
+        const distribution = new CloudFrontDistribution(this, 'WebClientDistribution', bucket);
 
         // 👇 create an Output
         new CfnOutput(this, 'bucketName', {
