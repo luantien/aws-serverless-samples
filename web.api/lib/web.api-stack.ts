@@ -1,4 +1,4 @@
-import { Stack, StackProps, RemovalPolicy } from 'aws-cdk-lib';
+import { Stack, StackProps, RemovalPolicy, CfnOutput } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as dynamoDb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
@@ -83,7 +83,7 @@ export class WebApiStack extends Stack {
             userPoolName: 'LibraryUserPool',
             removalPolicy: RemovalPolicy.DESTROY,
         });
-        userPool.addClient('web.client', {
+        const userPoolClient = userPool.addClient('web.client', {
             oAuth: {
                 flows: {
                     authorizationCodeGrant: true,
@@ -93,6 +93,10 @@ export class WebApiStack extends Stack {
                 logoutUrls: ['http://localhost:4200/signin'],
             },
         });
+        const userPoolDomain = userPool.addDomain('LibraryUserPoolDomain', {
+            cognitoDomain: {domainPrefix: `${Date.now()}-user-pool`},
+        });
+
         const auth = new apiGateway.CognitoUserPoolsAuthorizer(
             this,
             'LibraryUserPoolsAuthorizer',
@@ -216,5 +220,29 @@ export class WebApiStack extends Stack {
                 methodResponses: [{ statusCode: '200' }],
             }
         );
+
+        new CfnOutput(this, 'ApiGatewayEndpoint', {
+            value: gateway.url,
+            description: 'Endpoint for the API Gateway',
+            exportName: 'web-api-gateway-endpoint',
+        });
+
+        new CfnOutput(this, 'UserPoolId', {
+            value: userPool.userPoolId,
+            description: 'User Pool ID',
+            exportName: 'web-user-pool-id',
+        });
+        
+        new CfnOutput(this, 'UserPoolClientId', {
+            value: userPoolClient.userPoolClientId,
+            description: 'User Pool Client ID',
+            exportName: 'web-user-pool-client-id',
+        });
+
+        new CfnOutput(this, 'UserPoolDomain', {
+            value: `https://${userPoolDomain.domainName}.auth.${process.env.AWS_REGION}.amazoncognito.com`,
+            description: 'User Pool Domain',
+            exportName: 'web-user-pool-domain',
+        });
     }
 }
